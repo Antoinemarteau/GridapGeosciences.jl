@@ -16,6 +16,9 @@ PartitionedArrays = "5a9dfac6-5c52-46f7-8278-5e2210713be9"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
+[sources]
+Gridap = {path = ".."}
+
 [compat]
 FillArrays = "1.11"
 Gridap = "0.20.9"
