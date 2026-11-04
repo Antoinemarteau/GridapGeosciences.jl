@@ -9,3 +9,12 @@ for radius in radii
   parametric_models = generate_refined_models(n_ref_lvls, CubedSphereMesh(radius), IntrinsicManifold())
   AmbientSurfaceArea.main(parametric_models, ambient_models)
 end
+
+## Volume form: the parametric metric is read by `⋆` only with DG_calc=true
+for radius in radii
+  ambient_models = generate_refined_models(n_ref_lvls, CubedSphereMesh(radius), ExtrinsicManifold())
+  parametric_models = generate_refined_models(n_ref_lvls, CubedSphereMesh(radius),
+                                              IntrinsicManifold(); DG_calc=true)
+  AmbientSurfaceArea.main_volume_form(parametric_models, ambient_models)
+end
+
