@@ -80,9 +80,9 @@ function check_compressed_chain(shape_name, mesh, n_charts_expected, nref=1)
   @assert jtj_met isa CompressedArray "[$shape_name] lazy_map(JtJ, grads) isa $(typeof(jtj_met)), expected CompressedArray"
   @assert length(jtj_met.values) == n_charts_expected "[$shape_name] JtJ values has $(length(jtj_met.values)) entries, expected $n_charts_expected"
 
-  # ── get_cell_inv_metric (via inverse_metric_field per chart) ─────────────
-  inv_met = get_cell_inv_metric(g)
-  @assert inv_met isa CompressedArray "[$shape_name] get_cell_inv_metric isa $(typeof(inv_met)), expected CompressedArray"
+  # ── get_cell_chart_inv_metric (via inverse_metric_field per chart) ─────────────
+  inv_met = get_cell_chart_inv_metric(g)
+  @assert inv_met isa CompressedArray "[$shape_name] get_cell_chart_inv_metric isa $(typeof(inv_met)), expected CompressedArray"
   @assert length(inv_met.values) == n_charts_expected "[$shape_name] inv_metric values has $(length(inv_met.values)) entries, expected $n_charts_expected"
 
   # ── lazy_map(Operation(inv), cell_metric) ────────────────────────────────

@@ -95,8 +95,8 @@ Gridap.Geometry.num_point_dims(m::AdaptedDiscreteModel{Dc,Dp,<:AtlasDiscreteMode
 get_atlas_grid(m::AtlasDiscreteModel)              = m.atlas_grid
 get_ambient_dim(m::AtlasDiscreteModel{Dc,Da}) where {Dc,Da} = Da
 get_cell_ambient_maps(m::AtlasDiscreteModel)       = get_cell_ambient_maps(m.atlas_grid)
-get_cell_metric(m::AtlasDiscreteModel)             = get_cell_metric(m.atlas_grid)
-get_cell_inv_metric(m::AtlasDiscreteModel)         = get_cell_inv_metric(m.atlas_grid)
+get_cell_chart_metric(m::AtlasDiscreteModel)       = get_cell_chart_metric(m.atlas_grid)
+get_cell_chart_inv_metric(m::AtlasDiscreteModel)   = get_cell_chart_inv_metric(m.atlas_grid)
 ManifoldStyle(::Type{<:AtlasDiscreteModel{Dc,Da,G,A,P,C,O,M}}) where {Dc,Da,G,A,P,C,O,M} = M()
 ManifoldStyle(m::AtlasDiscreteModel) = ManifoldStyle(typeof(m))
 
@@ -230,6 +230,11 @@ end
 
 const IntrinsicAtlasDiscreteModel{Dc,Da,G,A,P,C,O} = AtlasDiscreteModel{Dc,Da,G,A,P,C,O,<:IntrinsicManifold}
 const ExtrinsicAtlasDiscreteModel{Dc,Da,G,A,P,C,O} = AtlasDiscreteModel{Dc,Da,G,A,P,C,O,<:ExtrinsicManifold}
+
+get_cell_metric(m::IntrinsicAtlasDiscreteModel)     = get_cell_chart_metric(m)
+get_cell_inv_metric(m::IntrinsicAtlasDiscreteModel) = get_cell_chart_inv_metric(m)
+get_cell_metric(m::ExtrinsicAtlasDiscreteModel)     = LinearAlgebra.I
+get_cell_inv_metric(m::ExtrinsicAtlasDiscreteModel) = LinearAlgebra.I
 
 const BFTATDM{Dc,Dp} = Gridap.Geometry.BodyFittedTriangulation{Dc,Dp,<:AtlasDiscreteModel}
 const BFTATDMIM{Dct,Dcm,Da,G,A,P,C,O} =
@@ -386,7 +391,7 @@ function Gridap.Geometry.Grid(::Type{ReferenceFE{Dcg}},
    face_chart_coords = lazy_map(evaluate, face_chart_maps, face_to_q_vertex_coords)
 
    face_to_cell_metric =
-      lazy_map(Reindex(get_cell_metric(model)), glue.face_to_cell)
+      lazy_map(Reindex(get_cell_chart_metric(cell_grid)), glue.face_to_cell)
 
    AtlasGrid(
      face_param_grid,

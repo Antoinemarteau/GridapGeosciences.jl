@@ -41,8 +41,8 @@ end
 Base.propertynames(m::ExtrudedAtlasOctreeDistributedDiscreteModel) =
   (fieldnames(typeof(m))..., :face_gids)
 
-get_cell_metric(m::ExtrudedAtlasOctreeDistributedDiscreteModel) =
-  map(get_cell_metric, local_views(m.atlas_dmodel))
+get_cell_chart_metric(m::ExtrudedAtlasOctreeDistributedDiscreteModel) =
+  map(get_cell_chart_metric, local_views(m.atlas_dmodel))
 
 # ============================================================
 # p6est helper functions (also used by CubedSphere3DParametricOctreeDistributedDiscreteModel)

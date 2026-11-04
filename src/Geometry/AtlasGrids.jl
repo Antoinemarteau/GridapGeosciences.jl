@@ -56,7 +56,7 @@ Trait controlling how `get_cell_map` assembles the cell map in `AtlasGrid`.
 - `ExtrinsicManifold()` — compose RefFE→Chart with Chart→Ambient (default).
   Gridap integration uses the full 3D Jacobian; the metric is implicit.
 - `IntrinsicManifold()` — return only the RefFE→Chart map.
-  The metric must be queried explicitly via `get_cell_metric` to write PDEs.
+  The metric must be queried explicitly via `get_cell_chart_metric` to write PDEs.
 """
 abstract type ManifoldStyle end
 struct ExtrinsicManifold <: ManifoldStyle end
@@ -368,7 +368,7 @@ end
 
 # get_cell_map dispatches on ManifoldStyle:
 #   ExtrinsicManifold — RefFE→Chart composed with Chart→Ambient (current behavior)
-#   IntrinsicManifold — RefFE→Chart only; metric queried via get_cell_metric
+#   IntrinsicManifold — RefFE→Chart only; metric queried via get_cell_chart_metric
 Gridap.Geometry.get_cell_map(g::AtlasGrid) = _get_cell_map(g, ManifoldStyle(g))
 
 function _get_cell_map(g::AtlasGrid, ::ExtrinsicManifold)
@@ -390,8 +390,8 @@ Gridap.Geometry.get_cell_node_ids(g::AtlasGrid) =
 
 get_param_grid(g::AtlasGrid)                       = g.param_grid
 get_cell_ambient_maps(g::AtlasGrid)                = g.cell_ambient_maps
-get_cell_metric(g::AtlasGrid)                      = g.cell_metric
-get_cell_inv_metric(g::AtlasGrid)                  = lazy_map(inverse_metric_field, g.cell_metric)
+get_cell_chart_metric(g::AtlasGrid)                = g.cell_metric
+get_cell_chart_inv_metric(g::AtlasGrid)            = lazy_map(inverse_metric_field, g.cell_metric)
 get_ambient_dim(::AtlasGrid{Dc,Da}) where {Dc,Da}  = Da
 
 """
