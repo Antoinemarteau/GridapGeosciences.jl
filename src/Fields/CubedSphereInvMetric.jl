@@ -1,24 +1,26 @@
-function _csphere_inv_metric(r::Float64, x::Point{2,T}) where T
+function _csphere_inv_metric(::Val{D}, r::Float64, x::Point{2,T}) where {D,T}
   a, b  = tan(x[1]), tan(x[2])
   sa, sb = 1 + a^2, 1 + b^2
   ρ2    = 1 + a^2 + b^2
   c     = ρ2 / (r^2 * sa * sb)
-  SymTensorValue{2,T,3}(c*sb, c*a*b, c*sa)
+  SymTensorValue{D,T,3}(c*sb, c*a*b, c*sa)
 end
 
-struct CubedSphereInvMetric <: Field
+struct CubedSphereInvMetric{D} <: Field
   radius :: Float64
 end
-Gridap.Arrays.evaluate!(cache, m::CubedSphereInvMetric, x::Point{2}) =
-  _csphere_inv_metric(m.radius, x)
-function Gridap.Arrays.return_cache(m::CubedSphereInvMetric, xs::AbstractArray{<:Point{2}})
-  CachedArray(similar(xs, SymTensorValue{2,Float64,3}))
+CubedSphereInvMetric(radius::Float64; DG_calc=false) =
+  CubedSphereInvMetric{DG_calc ? Con(2) : 2}(radius)
+Gridap.Arrays.evaluate!(cache, m::CubedSphereInvMetric{D}, x::Point{2}) where D =
+  _csphere_inv_metric(Val(D), m.radius, x)
+function Gridap.Arrays.return_cache(m::CubedSphereInvMetric{D}, xs::AbstractArray{<:Point{2}}) where D
+  CachedArray(similar(xs, SymTensorValue{D,Float64,3}))
 end
-function Gridap.Arrays.evaluate!(cache, m::CubedSphereInvMetric, xs::AbstractArray{<:Point{2}})
+function Gridap.Arrays.evaluate!(cache, m::CubedSphereInvMetric{D}, xs::AbstractArray{<:Point{2}}) where D
   setsize!(cache, size(xs))
   r = m.radius
   @inbounds for i in eachindex(xs)
-    cache.array[i] = _csphere_inv_metric(r, xs[i])
+    cache.array[i] = _csphere_inv_metric(Val(D), r, xs[i])
   end
   cache.array
 end
@@ -69,4 +71,5 @@ function Gridap.Arrays.evaluate!(cache, f::FieldGradient{1,<:CubedSphereInvMetri
   cache.array
 end
 
-inverse_metric_field(f::CubedSphereMetric) = CubedSphereInvMetric(f.radius)
+inverse_metric_field(f::CubedSphereMetric{2})      = CubedSphereInvMetric{2}(f.radius)
+inverse_metric_field(f::CubedSphereMetric{Cov(2)}) = CubedSphereInvMetric{Con(2)}(f.radius)

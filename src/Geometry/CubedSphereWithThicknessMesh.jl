@@ -30,7 +30,7 @@ intermediate_boundary=4.  Odd-indexed vertices sit on the inner (bottom) shell;
 even-indexed on the outer (top) shell.  Edges and 2D facets are tagged by their
 vertex parities; mixed-parity ones are intermediate.
 """
-function get_coarse_mesh(m::CubedSphereWithThicknessMesh)
+function get_coarse_mesh(m::CubedSphereWithThicknessMesh; DG_calc=false)
   # Coordinate values are unused — AtlasGrid replaces them with cell_chart_coords.
   # Any distinct values that give a valid non-degenerate mesh work here.
   node_coords = Vector{Point{3,Float64}}([
@@ -118,7 +118,7 @@ function get_coarse_mesh(m::CubedSphereWithThicknessMesh)
   ]
   cell_chart_coords = fill(panel_corners, NPANELS)
   ambient_maps      = [CubedSphereWithThicknessMap(p, m.radius, m.thickness) for p in 1:NPANELS]
-  metric_fields     = fill(CubedSphereWithThicknessMetric(m.radius, m.thickness), NPANELS)
+  metric_fields     = fill(CubedSphereWithThicknessMetric(m.radius, m.thickness; DG_calc), NPANELS)
 
   CoarseMeshInfo(model, cell_chart_coords, ambient_maps, metric_fields)
 end

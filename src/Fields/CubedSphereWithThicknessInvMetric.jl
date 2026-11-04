@@ -1,36 +1,40 @@
-function _csphere3d_inv_metric(radius::Float64, thickness::Float64, x::Point{3,T}) where T
+function _csphere3d_inv_metric(::Val{D}, radius::Float64, thickness::Float64, x::Point{3,T}) where {D,T}
   γ, α, β = x[1], x[2], x[3]
   a, b   = tan(α), tan(β)
   sa, sb = 1 + a^2, 1 + b^2
   ρ2     = 1 + a^2 + b^2
   s2     = (1 + thickness * γ / radius)^2
   ci     = ρ2 / (radius^2 * sa * sb)
-  SymTensorValue{3,T,6}(
+  SymTensorValue{D,T,6}(
     T(1 / thickness^2), zero(T), zero(T),
     ci*sb/s2, ci*a*b/s2, ci*sa/s2,
   )
 end
 
-struct CubedSphereWithThicknessInvMetric <: Field
+struct CubedSphereWithThicknessInvMetric{D} <: Field
   radius    :: Float64
   thickness :: Float64
 end
-Gridap.Arrays.evaluate!(cache, m::CubedSphereWithThicknessInvMetric, x::Point{3}) =
-  _csphere3d_inv_metric(m.radius, m.thickness, x)
-function Gridap.Arrays.return_cache(m::CubedSphereWithThicknessInvMetric, xs::AbstractArray{<:Point{3}})
-  CachedArray(similar(xs, SymTensorValue{3,Float64,6}))
+CubedSphereWithThicknessInvMetric(radius::Float64, thickness::Float64; DG_calc=false) =
+  CubedSphereWithThicknessInvMetric{DG_calc ? Con(3) : 3}(radius, thickness)
+Gridap.Arrays.evaluate!(cache, m::CubedSphereWithThicknessInvMetric{D}, x::Point{3}) where D =
+  _csphere3d_inv_metric(Val(D), m.radius, m.thickness, x)
+function Gridap.Arrays.return_cache(m::CubedSphereWithThicknessInvMetric{D}, xs::AbstractArray{<:Point{3}}) where D
+  CachedArray(similar(xs, SymTensorValue{D,Float64,6}))
 end
-function Gridap.Arrays.evaluate!(cache, m::CubedSphereWithThicknessInvMetric, xs::AbstractArray{<:Point{3}})
+function Gridap.Arrays.evaluate!(cache, m::CubedSphereWithThicknessInvMetric{D}, xs::AbstractArray{<:Point{3}}) where D
   setsize!(cache, size(xs))
   r, t = m.radius, m.thickness
   @inbounds for i in eachindex(xs)
-    cache.array[i] = _csphere3d_inv_metric(r, t, xs[i])
+    cache.array[i] = _csphere3d_inv_metric(Val(D), r, t, xs[i])
   end
   cache.array
 end
 
-inverse_metric_field(f::CubedSphereWithThicknessMetric) =
-  CubedSphereWithThicknessInvMetric(f.radius, f.thickness)
+inverse_metric_field(f::CubedSphereWithThicknessMetric{3}) =
+  CubedSphereWithThicknessInvMetric{3}(f.radius, f.thickness)
+inverse_metric_field(f::CubedSphereWithThicknessMetric{Cov(3)}) =
+  CubedSphereWithThicknessInvMetric{Con(3)}(f.radius, f.thickness)
 
 # ── FieldGradient of CubedSphereWithThicknessInvMetric ────────────────────────
 #

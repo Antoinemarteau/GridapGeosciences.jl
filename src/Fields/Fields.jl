@@ -6,6 +6,7 @@ using Gridap.Adaptivity, Gridap.Helpers, Gridap.Visualization
 using Gridap.Algebra, Gridap.FESpaces
 
 import Gridap.TensorValues: symmetric_part, SymTensorValue, ThirdOrderTensorValue, contracted_product
+import Gridap.TensorValues: Cov, Con
 
 include("Cartesian2SphericalMap.jl")
 export Cartesian2SphericalMap

@@ -17,9 +17,9 @@ end
 
 # ── get_coarse_mesh(ExtrudedCubedSphereWithThicknessMesh) ────────────────────
 
-function get_coarse_mesh(m::ExtrudedCubedSphereWithThicknessMesh)
+function get_coarse_mesh(m::ExtrudedCubedSphereWithThicknessMesh; DG_calc=false)
   cubed_sphere_mesh_info = get_coarse_mesh(CubedSphereMesh(m.radius))
   ambient_maps      = [CubedSphereWithThicknessMap(p, m.radius, m.thickness) for p in 1:NPANELS]
-  metric_fields     = fill(CubedSphereWithThicknessMetric(m.radius, m.thickness), NPANELS)
+  metric_fields     = fill(CubedSphereWithThicknessMetric(m.radius, m.thickness; DG_calc), NPANELS)
   CoarseMeshInfo(cubed_sphere_mesh_info.model, cubed_sphere_mesh_info.cell_chart_coords, ambient_maps, metric_fields)
 end

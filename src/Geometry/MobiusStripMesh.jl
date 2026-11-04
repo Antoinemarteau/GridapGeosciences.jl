@@ -59,7 +59,7 @@ Seam continuity:
   Interior (θ = π):   map_C1(1, t)  = map_C2(−1, t)
   Twist    (θ = 0≡2π): map_C1(−1, t) = map_C2(1, −t)   [t ↦ −t encodes the half-twist]
 """
-function get_coarse_mesh(m::MobiusStripMesh)
+function get_coarse_mesh(m::MobiusStripMesh; DG_calc=false)
   R, W = m.radius, m.half_width
 
   # Coordinate values are unused — AtlasGrid replaces them with cell_chart_coords.
@@ -86,7 +86,7 @@ function get_coarse_mesh(m::MobiusStripMesh)
   ref_corners       = [Point(-1.0,-1.0), Point(1.0,-1.0), Point(-1.0,1.0), Point(1.0,1.0)]
   cell_chart_coords = [ref_corners, ref_corners]
   ambient_maps      = [MobiusMap(R, W, 1.0), MobiusMap(R, W, 3.0)]
-  metric_fields     = [MobiusMetric(R, W, 1.0), MobiusMetric(R, W, 3.0)]
+  metric_fields     = [MobiusMetric(R, W, 1.0; DG_calc), MobiusMetric(R, W, 3.0; DG_calc)]
 
   CoarseMeshInfo(model, cell_chart_coords, ambient_maps, metric_fields)
 end
