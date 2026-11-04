@@ -41,6 +41,8 @@ end
 @publish Geometry get_cell_ambient_maps
 @publish Geometry get_cell_metric
 @publish Geometry get_cell_inv_metric
+@publish Geometry get_cell_chart_metric
+@publish Geometry get_cell_chart_inv_metric
 @publish Geometry JtJ
 @publish Geometry get_atlas_grid
 @publish Geometry get_ambient_dim

@@ -7,6 +7,7 @@ using LinearAlgebra
 using FillArrays
 import Gridap.TensorValues: symmetric_part, SymTensorValue, ThirdOrderTensorValue, contracted_product
 import Gridap.Geometry: Grid, GridView
+import Gridap.Geometry: get_cell_metric, get_cell_inv_metric
 import GridapGeosciences.Helpers: J
 import GridapGeosciences.Fields: CubedSphereMap, CubedSphereWithThicknessMap
 
@@ -31,6 +32,7 @@ export ExtrudedCubedSphereWithThicknessMesh
 
 export get_atlas_grid
 export get_cell_ambient_maps, get_cell_metric, get_cell_inv_metric
+export get_cell_chart_metric, get_cell_chart_inv_metric
 export get_coarse_mesh
 export JtJ
 export generate_refined_models

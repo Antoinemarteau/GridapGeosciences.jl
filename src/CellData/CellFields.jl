@@ -15,7 +15,7 @@ function MetricCellField(
     trian :: BFTATDM{Dc,Dp},
 ) where {Dc,Dp}
   model = Gridap.Geometry.get_background_model(trian)
-  Gridap.CellData.GenericCellField(get_cell_metric(model),
+  Gridap.CellData.GenericCellField(get_cell_chart_metric(model),
                                    trian,
                                    Gridap.CellData.PhysicalDomain())
 end
@@ -31,7 +31,7 @@ function MetricCellField(
     trian ::  Gridap.Geometry.BoundaryTriangulation{Dc,Dp,
               <:BFTATDM{Dc,Dp}},
 ) where {Dc,Dp}
-  Gridap.CellData.GenericCellField(get_cell_metric(trian.trian.grid),
+  Gridap.CellData.GenericCellField(get_cell_chart_metric(trian.trian.grid),
                                    trian,
                                    Gridap.CellData.PhysicalDomain())
 end
@@ -144,7 +144,9 @@ function InvMetricCellField(
     trian :: BFTATDM{Dc,Dp},
 ) where {Dc,Dp}
   model = Gridap.Geometry.get_background_model(trian)
-  Gridap.CellData.GenericCellField(get_cell_inv_metric(model), trian, Gridap.CellData.PhysicalDomain())
+  Gridap.CellData.GenericCellField(get_cell_chart_inv_metric(model),
+                                   trian,
+                                   Gridap.CellData.PhysicalDomain())
 end
 
 function InvMetricCellField(
@@ -158,7 +160,7 @@ function InvMetricCellField(
     trian ::  Gridap.Geometry.BoundaryTriangulation{Dc,Dp,
               <:BFTATDM{Dc,Dp}},
 ) where {Dc,Dp}
-  Gridap.CellData.GenericCellField(get_cell_inv_metric(trian.trian.grid),
+  Gridap.CellData.GenericCellField(get_cell_chart_inv_metric(trian.trian.grid),
                                    trian,
                                    Gridap.CellData.PhysicalDomain())
 end

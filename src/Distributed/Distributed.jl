@@ -21,6 +21,7 @@ import GridapDistributed: BoundaryTriangulation
 import GridapDistributed: CellField
 
 using GridapGeosciences.Geometry
+import GridapGeosciences.Geometry: get_cell_chart_metric, get_cell_chart_inv_metric
 import GridapGeosciences.CellData: pullback_area_form, pushforward_normal,
                                    pushforward_reference_normal, pushforward_parametric_normal
 import GridapGeosciences.Geometry: NPANELS, CUBE_HALF_EDGE

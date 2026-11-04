@@ -402,8 +402,8 @@ end
 Base.propertynames(m::AtlasOctreeDistributedDiscreteModel) =
   (fieldnames(typeof(m))..., :face_gids)
 
-get_cell_metric(m::AtlasOctreeDistributedDiscreteModel) =
-  map(get_cell_metric, local_views(m.atlas_dmodel))
+get_cell_chart_metric(m::AtlasOctreeDistributedDiscreteModel) =
+  map(get_cell_chart_metric, local_views(m.atlas_dmodel))
 
 # ============================================================
 # Constructors
