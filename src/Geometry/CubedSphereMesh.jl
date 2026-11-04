@@ -77,7 +77,7 @@ Face labels: the cubed sphere is a closed manifold — no topological boundary.
 FaceLabeling(topo) assigns entity 1 ("interior") to all faces, which also
 satisfies the p4est precondition that all face entity ids be positive.
 """
-function get_coarse_mesh(m::CubedSphereMesh)
+function get_coarse_mesh(m::CubedSphereMesh; DG_calc=false)
   # Coordinate values are unused — AtlasGrid replaces them with cell_chart_coords.
   # Any distinct values that give a valid non-degenerate mesh work here.
   node_coords = Vector{Point{2,Float64}}([
@@ -111,7 +111,7 @@ function get_coarse_mesh(m::CubedSphereMesh)
   ]
   cell_chart_coords = fill(panel_corners, NPANELS)
   ambient_maps      = [CubedSphereMap(p, m.radius) for p in 1:NPANELS]
-  metric_fields     = fill(CubedSphereMetric(m.radius), NPANELS)
+  metric_fields     = fill(CubedSphereMetric(m.radius; DG_calc), NPANELS)
 
   CoarseMeshInfo(model, cell_chart_coords, ambient_maps, metric_fields)
 end

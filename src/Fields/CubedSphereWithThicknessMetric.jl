@@ -21,33 +21,35 @@
 #   h₂₃ = (1/scale²)·g_surf⁻¹₁₂ = ρ²·a·b/(scale²·r²·sa·sb)
 #   h₃₃ = (1/scale²)·g_surf⁻¹₂₂ = ρ²·sa/(scale²·r²·sa·sb)
 
-function _csphere3d_metric(radius::Float64, thickness::Float64, x::Point{3,T}) where T
+function _csphere3d_metric(::Val{D}, radius::Float64, thickness::Float64, x::Point{3,T}) where {D,T}
   γ, α, β = x[1], x[2], x[3]
   a, b   = tan(α), tan(β)
   sa, sb = 1 + a^2, 1 + b^2
   ρ4     = (1 + a^2 + b^2)^2
   s2     = (1 + thickness * γ / radius)^2
   c      = radius^2 * sa * sb / ρ4
-  SymTensorValue{3,T,6}(
+  SymTensorValue{D,T,6}(
     T(thickness^2), zero(T), zero(T),
     s2*c*sa, -s2*c*a*b, s2*c*sb,
   )
 end
 
-struct CubedSphereWithThicknessMetric <: Field
+struct CubedSphereWithThicknessMetric{D} <: Field
   radius    :: Float64
   thickness :: Float64
 end
-Gridap.Arrays.evaluate!(cache, m::CubedSphereWithThicknessMetric, x::Point{3}) =
-  _csphere3d_metric(m.radius, m.thickness, x)
-function Gridap.Arrays.return_cache(m::CubedSphereWithThicknessMetric, xs::AbstractArray{<:Point{3}})
-  CachedArray(similar(xs, SymTensorValue{3,Float64,6}))
+CubedSphereWithThicknessMetric(radius::Float64, thickness::Float64; DG_calc=false) =
+  CubedSphereWithThicknessMetric{DG_calc ? Cov(3) : 3}(radius, thickness)
+Gridap.Arrays.evaluate!(cache, m::CubedSphereWithThicknessMetric{D}, x::Point{3}) where D =
+  _csphere3d_metric(Val(D), m.radius, m.thickness, x)
+function Gridap.Arrays.return_cache(m::CubedSphereWithThicknessMetric{D}, xs::AbstractArray{<:Point{3}}) where D
+  CachedArray(similar(xs, SymTensorValue{D,Float64,6}))
 end
-function Gridap.Arrays.evaluate!(cache, m::CubedSphereWithThicknessMetric, xs::AbstractArray{<:Point{3}})
+function Gridap.Arrays.evaluate!(cache, m::CubedSphereWithThicknessMetric{D}, xs::AbstractArray{<:Point{3}}) where D
   setsize!(cache, size(xs))
   r, t = m.radius, m.thickness
   @inbounds for i in eachindex(xs)
-    cache.array[i] = _csphere3d_metric(r, t, xs[i])
+    cache.array[i] = _csphere3d_metric(Val(D), r, t, xs[i])
   end
   cache.array
 end

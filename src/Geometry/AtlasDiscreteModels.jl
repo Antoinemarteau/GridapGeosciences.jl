@@ -215,17 +215,24 @@ end
 
 """
     AtlasDiscreteModel(mesh::CoarseMesh, num_refinements;
-                       orientation_style=nothing, manifold_style=ExtrinsicManifold())
+                       orientation_style=nothing, manifold_style=ExtrinsicManifold(),
+                       DG_calc=false)
 
 Build an `AtlasDiscreteModel` directly from a mesh descriptor (e.g. `CubedSphereMesh(1.0)`).
+
+`DG_calc=true` opts in explicit `Cov`/`Con` variance of the metric tensor,
+necessary for implicit metric forwarding to the differential geometry
+operators.
 """
 function AtlasDiscreteModel(
     mesh            :: CoarseMesh,
     num_refinements :: Int;
     orientation_style = nothing,
     manifold_style    = ExtrinsicManifold(),
+    DG_calc           = false,
 )
-  AtlasDiscreteModel(get_coarse_mesh(mesh), num_refinements; orientation_style, manifold_style)
+  AtlasDiscreteModel(get_coarse_mesh(mesh; DG_calc), num_refinements;
+                     orientation_style, manifold_style)
 end
 
 const IntrinsicAtlasDiscreteModel{Dc,Da,G,A,P,C,O} = AtlasDiscreteModel{Dc,Da,G,A,P,C,O,<:IntrinsicManifold}
@@ -253,15 +260,16 @@ const BFTATDMEM{Dct,Dcm,Da,G,A,P,C,O} =
 function generate_refined_models(n_ref_lvls,
                             coarse_mesh,
                             manifold_style,
-                            coarse_model=false)
-  model = AtlasDiscreteModel(coarse_mesh, 0; manifold_style=manifold_style)
+                            coarse_model=false;
+                            DG_calc=false)
+  model = AtlasDiscreteModel(coarse_mesh, 0; manifold_style=manifold_style, DG_calc)
   models = Vector{DiscreteModel}(undef,n_ref_lvls)
   for n in n_ref_lvls:-1:1
     model = Gridap.Adaptivity.refine(model)
     models[n] = model
   end
   if coarse_model
-    push!(models,AtlasDiscreteModel(coarse_mesh,0; manifold_style=manifold_style))
+    push!(models,AtlasDiscreteModel(coarse_mesh,0; manifold_style=manifold_style, DG_calc))
   end
   models
 end
@@ -269,9 +277,10 @@ end
 function get_cubed_sphere_refined_models(n_ref_lvls::Int,
                                          radius::Real,
                                          manifold_style,
-                                         coarse_model=false)
+                                         coarse_model=false;
+                                         DG_calc=false)
   coarse_mesh = CubedSphereMesh(radius)
-  generate_refined_models(n_ref_lvls, coarse_mesh, manifold_style, coarse_model)
+  generate_refined_models(n_ref_lvls, coarse_mesh, manifold_style, coarse_model; DG_calc)
 end
 
 

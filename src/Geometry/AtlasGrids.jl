@@ -432,15 +432,20 @@ end
 
 """
     AtlasGrid(mesh::CoarseMesh, num_refinements;
-              orientation_style=nothing, manifold_style=ExtrinsicManifold())
+              orientation_style=nothing, manifold_style=ExtrinsicManifold(), DG_calc=false)
 
 Build an `AtlasGrid` directly from a mesh descriptor (e.g. `CubedSphereMesh(1.0)`).
+
+`DG_calc=true` opts in explicit `Cov`/`Con` variance of the metric tensor,
+necessary for implicit metric forwarding to the differential geometry
+operators.
 """
 function AtlasGrid(
     mesh            :: CoarseMesh,
     num_refinements :: Int;
     orientation_style = nothing,
     manifold_style    = ExtrinsicManifold(),
+    DG_calc           = false,
 )
-  AtlasGrid(get_coarse_mesh(mesh), num_refinements; orientation_style, manifold_style)
+  AtlasGrid(get_coarse_mesh(mesh; DG_calc), num_refinements; orientation_style, manifold_style)
 end

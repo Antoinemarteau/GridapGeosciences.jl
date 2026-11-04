@@ -47,7 +47,7 @@ Cells C3, C6, C9 carry the seam wrap: their BR/TR indices are 1, 4, 7 / 4, 7, 10
 Bottom boundary (entity 3): edges {1,2} {2,3} {3,1} — each in exactly one cell.
 Top    boundary (entity 4): edges {10,11} {11,12} {12,10}.
 """
-function get_coarse_mesh(m::CylinderMesh)
+function get_coarse_mesh(m::CylinderMesh; DG_calc=false)
   r, h = m.radius, m.height
 
   # 12 nodes; coordinate values are junk — AtlasGrid replaces them.
@@ -123,7 +123,7 @@ function get_coarse_mesh(m::CylinderMesh)
   ]
 
   ambient_maps  = fill(CylinderMap(r), 9)
-  metric_fields = fill(CylinderMetric(r), 9)
+  metric_fields = fill(CylinderMetric(r; DG_calc), 9)
 
   CoarseMeshInfo(model, cell_chart_coords, ambient_maps, metric_fields)
 end
