@@ -9,6 +9,7 @@ import Gridap.Geometry: get_grid_topology, num_faces, num_cell_dims,
                         get_faces, num_cells, get_cell_map,
                         BodyFittedTriangulation
 import Gridap.Fields: Map, VectorValue, TensorValue, Point, ∇
+import Gridap.TensorValues: ContraVectorValue
 import Gridap.Arrays: array_cache, CachedMatrix, return_type, getindex!,
                       testitem, lazy_map, IdentityVector, setsize!, return_cache,
                       evaluate, evaluate!
