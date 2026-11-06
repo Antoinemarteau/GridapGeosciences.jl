@@ -123,7 +123,7 @@ end
 function _generate_change_of_basis_matrices(model, cell_reffe;
                                             face_to_master_cell_id=_generate_face_to_master_cell_id(model))
   T=_get_value_type(cell_reffe)
-  if T <: VectorValue
+  if T <: VectorValue || T <: ContraVectorValue
       k = GenerateChangeOfBasisMatrixMap(model,face_to_master_cell_id)
       return lazy_map(k,
                       cell_reffe,
@@ -145,7 +145,7 @@ end
 
 
 function _compute_cell_bases_changes(
-  ::Type{<:VectorValue},
+  ::Type{<:Union{VectorValue,ContraVectorValue}},
   ::ReferenceFEName, 
   ::IdentityPiolaMap, 
   model::IntrinsicAtlasDiscreteModel{Dc, Da, G, A, P, C, O}, 
