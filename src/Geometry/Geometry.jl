@@ -14,6 +14,7 @@ import GridapGeosciences.Fields: CubedSphereMap, CubedSphereWithThicknessMap
 include("CoarseMeshes.jl")
 include("CylinderMesh.jl")
 include("MobiusStripMesh.jl")
+include("TorusMesh.jl")
 include("CubedSphereMesh.jl")
 include("CubedSphereWithThicknessMesh.jl")
 include("ExtrudedCubedSphereWithThicknessMesh.jl")
@@ -26,6 +27,7 @@ export IntrinsicManifold, ExtrinsicManifold
 
 export CylinderMesh
 export MobiusStripMesh
+export TorusMesh
 export CubedSphereMesh
 export CubedSphereWithThicknessMesh
 export ExtrudedCubedSphereWithThicknessMesh

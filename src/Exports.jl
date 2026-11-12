@@ -15,6 +15,7 @@ end
 @publish Fields MobiusMap
 @publish Fields MobiusMetric
 @publish Fields MobiusInvMetric
+@publish Fields TorusMap
 @publish Fields CubedSphereMap
 @publish Fields CubedSphereInvMap
 @publish Fields CubedSphereMetric
@@ -34,6 +35,7 @@ end
 @publish Geometry ExtrinsicManifold
 @publish Geometry CylinderMesh
 @publish Geometry MobiusStripMesh
+@publish Geometry TorusMesh
 @publish Geometry CubedSphereMesh
 @publish Geometry CubedSphereWithThicknessMesh
 @publish Geometry ExtrudedCubedSphereWithThicknessMesh
