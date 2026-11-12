@@ -21,6 +21,9 @@ include("MobiusMetric.jl")
 include("MobiusInvMetric.jl")
 export MobiusMap, MobiusMetric, MobiusInvMetric
 
+include("TorusMap.jl")
+export TorusMap
+
 include("CubedSphereMap.jl")
 include("CubedSphereWithThicknessMap.jl")
 include("CubedSphereInvMap.jl")
